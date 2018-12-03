@@ -3,7 +3,7 @@ applications:
   path: ./applications/timesheets-server/build/libs/timesheets-server.jar
   routes:
   - route: timesheets-pal-distributed-gaya.cfapps.io
-  memory: 256M
+  memory: 630M
   instances: 1
   env:
     REGISTRATION_SERVER_ENDPOINT: https://registration-pal-distributed-gaya.cfapps.io
