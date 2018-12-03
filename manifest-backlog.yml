@@ -2,10 +2,10 @@ applications:
 - name: tracker-backlog
   path: ./applications/backlog-server/build/libs/backlog-server.jar
   routes:
-  - route: backlog-pal-distributed-gaya.cfapps.io
-  memory: 256M
+  - route: backlog-pal-distributed-apps.dev.pcf-aws.com
+  memory: 1G
   instances: 1
   env:
-    REGISTRATION_SERVER_ENDPOINT: https://registration-pal-distributed-gaya.cfapps.io
+    REGISTRATION_SERVER_ENDPOINT: https://registration-pal-distributed-apps.dev.pcf-aws.com
   services:
   - tracker-backlog-database

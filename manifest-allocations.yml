@@ -2,10 +2,10 @@ applications:
 - name: tracker-allocations
   path: ./applications/allocations-server/build/libs/allocations-server.jar
   routes:
-  - route: allocations-pal-distributed-gaya.cfapps.io
-  memory: 256M
+  - route: allocations-pal-distributed-apps.dev.pcf-aws.com
+  memory: 1G
   instances: 1
   env:
-    REGISTRATION_SERVER_ENDPOINT: https://registration-pal-distributed-gaya.cfapps.io
+    REGISTRATION_SERVER_ENDPOINT: https://registration-pal-distributed-apps.dev.pcf-aws.com
   services:
   - tracker-allocations-database

@@ -2,10 +2,10 @@ applications:
 - name: tracker-timesheets
   path: ./applications/timesheets-server/build/libs/timesheets-server.jar
   routes:
-  - route: timesheets-pal-distributed-gaya.cfapps.io
-  memory: 630M
+  - route: timesheets-pal-distributed-apps.dev.pcf-aws.com
+  memory: 1G
   instances: 1
   env:
-    REGISTRATION_SERVER_ENDPOINT: https://registration-pal-distributed-gaya.cfapps.io
+    REGISTRATION_SERVER_ENDPOINT: https://registration-pal-distributed-apps.dev.pcf-aws.com
   services:
   - tracker-timesheets-database
