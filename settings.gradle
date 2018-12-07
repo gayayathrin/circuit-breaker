@@ -1,4 +1,4 @@
-rootProject.name = "service-discovery"
+rootProject.name = "pal-tracker-distributed"
 
 include "applications:allocations-server"
 include "applications:backlog-server"
