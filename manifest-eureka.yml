@@ -1,8 +1,0 @@
-applications:
-- name: tracker-timesheets
-  path: ./platform-services/build/libs/platform-services.jar
-  routes:
-  - route: eureka-pal-server.apps.dev.pcf-aws.com
-  memory: 1G
-  instances: 1
-

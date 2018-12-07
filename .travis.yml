@@ -33,8 +33,7 @@ jobs:
           - "applications/allocations-server/build/libs/allocations-server.jar"
           - "applications/backlog-server/build/libs/backlog-server.jar"
           - "applications/registration-server/build/libs/registration-server.jar"
-          - "applications/timesheets-server/build/libs/timesheets-server.jar"
-          - "platform-services/build/libs/platform-services.jar"
+          - "applications/timesheets-server/build/libs/timesheets-server.jar"          
         skip_cleanup: true
     - stage: deploy
       language: java
@@ -69,16 +68,6 @@ jobs:
       before_deploy:
         - cp manifest-registration.yml manifest.yml
         - echo "Deploying registration server $RELEASE_TAG"
-      deploy:
-        <<: *cloudfoundry
-    - stage: deploy
-      language: bash
-      script:
-      - echo "Downloading eureka server $RELEASE_TAG"
-      - wget -P platform-services/build/libs https://github.com/$GITHUB_USERNAME/service_discovery/releases/download/$RELEASE_TAG/platform-services.jar
-      before_deploy:
-      - cp manifest-eureka.yml manifest.yml
-      - echo "Deploying eureka server $RELEASE_TAG"
       deploy:
         <<: *cloudfoundry
     - stage: deploy
