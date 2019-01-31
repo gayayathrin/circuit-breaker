@@ -2,9 +2,10 @@ applications:
 - name: tracker-backlog
   path: ./applications/backlog-server/build/libs/backlog-server.jar
   routes:
-  - route: backlog-pal-distributed.apps.dev.pcf-aws.com
+  - route: backlog-pal-distributed-cb.apps.dev.pcf-aws.com
   memory: 1G
   instances: 1
   services:
   - tracker-backlog-database
   - tracker-service-registry
+  - tracker-circuit-breaker-dashboard
