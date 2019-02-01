@@ -2,9 +2,10 @@ applications:
 - name: tracker-registration
   path: ./applications/registration-server/build/libs/registration-server.jar
   routes:
-  - route: registration-pal-distributed-cb.apps.dev.pcf-aws.com
+  - route: registration-pal-distributed-config.apps.dev.pcf-aws.com
   memory: 1G
   instances: 1
   services:
   - tracker-registration-database
   - tracker-service-registry
+  - tracker-config-server
