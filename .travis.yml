@@ -93,4 +93,5 @@ jobs:
         - chmod a+x gradlew
       script:
         - cf login -a $CF_API_URL -u $CF_USERNAME -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+        - chmod a+x gradlew
         - ./gradlew cfMigrate
