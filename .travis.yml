@@ -20,6 +20,7 @@ jobs:
       install: skip
       before_script:
         - mysql -uroot < databases/create_databases.sql
+        - chmod a+x gradlew
         - ./gradlew testMigrate
       script:
         - chmod a+x gradlew
