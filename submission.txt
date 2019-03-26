@@ -11,3 +11,8 @@ gradlew cloudNativeDeveloperDistributedSystemWithSecurity -PuaaUrl=https://savig
 gradle wrapper
 gradle tasks
 gradlew build
+
+cf create-service p-config-server trial tracker-config-server -c "{\"git\": {\"uri\": \"https://github.com/gayayathrin/tracker-config.git\", \"label\": \"master\"}}"
+
+
+gradlew cloudNativeDeveloperDistributedSystemWithConfigServer -PuaaUrl=https://savigaya.login.run.pivotal.io -PclientId=e138b44e-d9ba-446f-ac90-4db7a59eea0e -PclientSecret=363e42e6-2176-4f62-b9da-c00a09f227fd -PregistrationServerUrl=https://registration-gayathri-savitha.cfapps.io -PbacklogServerUrl=https://backlog-gayathri-savitha.cfapps.io -PallocationsServerUrl=https://allocations-gayathri-savitha.cfapps.io -PtimesheetsServerUrl=https://timesheets-gayathri-savitha.cfapps.io
