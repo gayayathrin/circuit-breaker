@@ -1,0 +1,13 @@
+gradlew cloudNativeDeveloperDistributedSystemWithSecurity -PuaaUrl=https://savigaya.login.run.pivotal.io -PclientId=e138b44e-d9ba-446f-ac90-4db7a59eea0e -PclientSecret=363e42e6-2176-4f62-b9da-c00a09f227fd -PregistrationServerUrl=https://registration-pal-vivekravi1.cfapps.io -PbacklogServerUrl=https://backlog-pal-vivekravi1.cfapps.io -PallocationsServerUrl=https://allocations-pal-vivekravi1.cfapps.io -PtimesheetsServerUrl=https://timesheets-pal-vivekravi1.cfapps.io
+
+
+gradlew cloudNativeDeveloperDistributedSystemWithSecurity -PuaaUrl=https://https://savigaya.login.run.pivotal.io -PclientId=1a592ebb-185e-483d-bb16-7f1d4fb3c0b9 -PclientSecret=18abdc0a-d486-489a-a51b-bcd4d08e1298 -PregistrationServerUrl=https://registration-pal-vivekravi1.cfapps.io -PbacklogServerUrl=https://backlog-pal-vivekravi1.cfapps.io -PallocationsServerUrl=https://allocations-pal-vivekravi1.cfapps.io -PtimesheetsServerUrl=https://timesheets-pal-vivekravi1.cfapps.io
+
+
+gradlew cloudNativeDeveloperDistributedSystemWithSecurity -PuaaUrl=https://savigaya.login.run.pivotal.io -PclientId=1a592ebb-185e-483d-bb16-7f1d4fb3c0b9 -PclientSecret=18abdc0a-d486-489a-a51b-bcd4d08e1298 -PregistrationServerUrl=https://registration-pal-vivekravi1.cfapps.io -PbacklogServerUrl=https://backlog-pal-vivekravi1.cfapps.io -PallocationsServerUrl=https://allocations-pal-vivekravi1.cfapps.io -PtimesheetsServerUrl=https://timesheets-pal-vivekravi1.cfapps.io
+
+
+4.1.0 to 4.3.1 in build.gradle of assignment-submission
+gradle wrapper
+gradle tasks
+gradlew build

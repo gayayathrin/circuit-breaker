@@ -8,13 +8,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class CfMigrationPlugin implements Plugin<Project> {
-    private final static int TUNNEL_PORT = 63306
-    private static final String KEY_NAME = 'flyway-migration-key'
 
     @Override
     void apply(Project project) {
         Process tunnelProcess = null
-        Map credentials = null
 
         project.with {
             afterEvaluate {
@@ -22,22 +19,13 @@ class CfMigrationPlugin implements Plugin<Project> {
                 def appName = databases.cfApp
                 def databaseInstanceName = databases.cfDatabase
 
-                task( "acquireCredentials") {
-                    doLast {
-                        println "Acquiring database credentials"
-                        credentials = acquireMysqlCredentials(databaseInstanceName)
-                    }
-                }
-
                 task("openTunnel") {
-                    dependsOn "acquireCredentials"
                     doLast {
                         println "Opening Tunnel for $appName"
                         Thread.start {
-                            tunnelProcess = "cf ssh -N -L ${TUNNEL_PORT}:${credentials['hostname']}:${credentials['port']} $appName".execute()
+                            tunnelProcess = "cf ssh -N -L 63306:${getMysqlHost(appName, databaseInstanceName)}:3306 $appName".execute()
                         }
-
-                        waitForTunnelConnectivity()
+                        sleep 5_000L
                     }
                 }
 
@@ -51,60 +39,53 @@ class CfMigrationPlugin implements Plugin<Project> {
                 task("cfMigrate", type: FlywayMigrateTask, group: "Migration") {
                     dependsOn "openTunnel"
                     finalizedBy "closeTunnel"
-                    doFirst { extension = buildFlywayExtension(project, credentials) }
+                    doFirst { extension = buildFlywayExtension(project, appName, databaseInstanceName) }
                 }
 
                 task("cfRepair", type: FlywayRepairTask, group: "Migration") {
                     dependsOn "openTunnel"
                     finalizedBy "closeTunnel"
-                    doFirst { extension = buildFlywayExtension(project, credentials) }
+                    doFirst { extension = buildFlywayExtension(project, appName, databaseInstanceName) }
                 }
             }
         }
     }
 
-    private static void waitForTunnelConnectivity() {
-        int remainingAttempts = 20
-        while (remainingAttempts > 0) {
-            remainingAttempts--
-            try {
-                new Socket('localhost', TUNNEL_PORT).close()
-                remainingAttempts = 0
-            } catch (ConnectException e) {
-                println "Waiting for tunnel ($remainingAttempts attempts remaining)"
-                sleep 1_000L
-            }
-        }
+    private def getMysqlHost(cfAppName, databaseInstanceName) {
+        return getMysqlCredentials(cfAppName, databaseInstanceName)["hostname"]
     }
 
-    private static def buildFlywayExtension(Project project, Map credentials) {
+    private static def buildFlywayExtension(Project project, String cfAppName, databaseInstanceName) {
         def extension = new FlywayExtension()
 
-        extension.user = credentials['username']
-        extension.password = credentials['password']
-        extension.url = "jdbc:mysql://127.0.0.1:${TUNNEL_PORT}/${credentials['name']}"
+        getMysqlCredentials(cfAppName, databaseInstanceName)?.with { credentials ->
+
+            extension.user = credentials["username"]
+            extension.password = credentials["password"]
+            extension.url = "jdbc:mysql://127.0.0.1:63306/${credentials["name"]}"
+        }
 
         extension.locations = ["filesystem:$project.projectDir/migrations"]
         return extension
     }
 
-    // Some services store their credentials in credhub, so they are
-    // not available in VCAP_SERVICES seen by clients. Therefore, we
-    // create a service key and then obtain the database credentials
-    // from that value. Key creation appears idempotent, so there
-    // is no need to check for prior existence.
-    private static Map acquireMysqlCredentials(databaseInstanceName) {
-        def creationOutput = execute(['cf', 'create-service-key', databaseInstanceName, KEY_NAME])
-        println creationOutput
+    private static def getMysqlCredentials(cfAppName, databaseInstanceName) {
+        def appGuid = execute("cf app $cfAppName --guid").trim()
+        def envResponse = execute("cf curl /v2/apps/$appGuid/env")
+        def envJson = new JsonSlurper().parseText(envResponse)
+        def vcapServicesMap = envJson["system_env_json"]?.getAt("VCAP_SERVICES")
 
-        def serviceKeyJson = execute(['cf', 'service-key', databaseInstanceName, KEY_NAME])
-                .replaceFirst(/(?s)^[^{]*/, '')
+        def entryWithDbInstance = vcapServicesMap
+                .find { key, value -> value.any { it["name"] == databaseInstanceName } }
 
-        return new JsonSlurper().parseText(serviceKeyJson) as Map
+        def dbInstance = entryWithDbInstance.value
+                .find { it["name"] == databaseInstanceName }
+
+        return dbInstance["credentials"]
     }
 
-    private static String execute(List args) {
-        def process = args.execute()
+    private static String execute(String command) {
+        def process = command.execute()
         def output = process.text
         process.waitFor()
         return output
